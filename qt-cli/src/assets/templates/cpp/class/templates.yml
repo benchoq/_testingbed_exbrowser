@@ -1,0 +1,23 @@
+version: "1"
+
+meta:
+  type: file
+  title: C++ class
+  description: >-
+    Creates a C++ header and source file 
+    for a new class that you can add to a C++ project.
+
+files:
+  - in: cpp-class.h
+    out: '{{ .headerFileName }}'
+
+  - in: cpp-class.cpp
+    out: '{{ .sourceFileName }}'
+
+fields:
+  - headerFileName: '{{ .name }}.h'
+  - sourceFileName: '{{ .name }}.cpp'
+  - parentClass: |
+      {{ if (eq .baseClass "QMainWindow") }}QWidget
+      {{ else }}{{ .baseClass }}
+      {{ end }}

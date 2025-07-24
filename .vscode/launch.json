@@ -1,0 +1,42 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run qt-cpp Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/qt-cpp"],
+      "outFiles": ["${workspaceFolder}/qt-cpp/out/**/*.js"],
+      "preLaunchTask": "npm qt-cpp watch"
+    },
+    {
+      "name": "Run qt-qml Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/qt-qml"],
+      "outFiles": ["${workspaceFolder}/qt-qml/out/**/*.js"],
+      "preLaunchTask": "npm qt-qml watch"
+    },
+    {
+      "name": "Run qt-core Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/qt-core"],
+      "outFiles": ["${workspaceFolder}/qt-core/out/**/*.js"],
+      "preLaunchTask": "npm qt-core watch + vite:start"
+    },
+    {
+      "name": "Run qt-ui Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/qt-ui"],
+      "outFiles": ["${workspaceFolder}/qt-ui/out/**/*.js"],
+      "cwd": "${workspaceFolder}/qt-ui",
+      "preLaunchTask": "npm qt-ui watch"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page vscodeext-how-create-files.html
+    \previouspage vscodeext-how-tos.html
+    \nextpage vscodeext-reference.html
+
+    \ingroup vscodeext-how-to-cpp
+    \ingroup vscodeext-how-to-qml
+
+    \title Add files to projects
+
+    To create a new file, select a preset for a particular file type:
+
+    \list 1
+        \li Go to \uicontrol {Command Palette}, and then select
+            \uicontrol {Qt: Create a new project or file}.
+        \li In \uicontrol {File}, select the file type.
+            \image {vscodeext-create-new-file.webp} {New item view}
+        \li In \uicontrol {Name}, enter a name for the file.
+        \li In \uicontrol {Create in}, enter the path for the file.
+        \li In \uicontrol {Options}, set options depending on the file type.
+        \li Select \uicontrol {Create} to create the file.
+        \li Edit the new file's content.
+    \endlist
+
+    You can create custom presets with the options you select.
+
+    \sa {Tutorial: Qt Widgets application}, {Create Qt projects}
+*/

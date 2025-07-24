@@ -1,0 +1,88 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page vscodeext-overview.html
+    \previouspage vscodeext-getting-started.html
+    \nextpage vscodeext-how-to-install.html
+
+    \title Overview
+
+    With \QVSC, you can develop \l [QtWidgets] {Qt Widgets}{widget-based} and
+    \l [QtQuick] {Qt Quick} applications for the desktop and web.
+
+    \image vscodeext-overview.webp {Qt source code open in the VS Code editor}
+
+    You can install Qt extension packs and individual extensions depending on
+    what kind of applications you develop.
+
+    \section1 C++ development
+
+    With the Qt C++ extension pack, you can:
+
+    \list
+        \li Use Qt in your CMake project by selecting a generated Qt kit
+        \li Get syntax highlighting and code completion for Qt-specific
+            file formats
+        \li Design Qt widgets-based UIs with \l{\QD}
+        \li Build Qt projects with \l{Build with CMake}{CMake}
+        \li Debug Qt's C++ types
+        \li Read \l {Qt Documentation}
+    \endlist
+
+    \section1 Qt Quick development
+
+    With the Qt Qml extension, you can:
+
+    \list
+        \li Get QML syntax highlighting and code completion with
+            \l{\QMLLS Reference}{\QMLLS}
+        \li Verify the syntax of QML code with \l{qmllint Reference}{qmllint}
+    \endlist
+
+    \section1 Web development
+
+    With the \l {Qt for WebAssembly} extension pack, you can:
+
+    \list
+        \li Use Qt in your CMake project by selecting a generated Qt kit
+        \li Get syntax highlighting and code completion for Qt-specific
+            file formats
+        \li Build Qt projects with CMake
+        \li Debug Qt for WebAssembly code
+        \li Read Qt documentation
+    \endlist
+
+    \section1 Usage data collection
+
+    \QVSC collects anonymous data about how you use it to help Qt to improve it:
+
+    \list
+        \li Operating system on your computer
+        \li \QVSC version
+        \li Visual Studio Code version
+        \li Date and time when you activate extensions, as well as the total
+            number or activations
+        \li Date and time when you run \QVSC commands, as well as the total
+            number of times you run each command
+        \li Values of some settings you specify for \QVSC
+        \li Exceptions
+        \li Date and time when you download \QMLLS, as well as the total
+            number of downloads
+        \li Name of CMake kit toolchain and the Qt version that you use to
+            build projects
+    \endlist
+
+    \QVSC never collects the following data:
+
+    \list
+        \li Source code
+        \li File paths
+        \li Folder structure of your projects
+        \li Values of settings you specify for VS Code or other plugins than
+            \QVSC
+        \li Build output
+    \endlist
+
+    \sa {Installation}
+*/

@@ -1,0 +1,34 @@
+name: Run tests on qtcli (all platforms)
+on:
+  pull_request:
+    paths:
+      - 'qt-cli/**'
+
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup environment
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: ./qt-cli/src/go.mod
+          cache-dependency-path: ./qt-cli/src/go.sum
+          cache: true
+
+      - name: Run tests
+        shell: bash
+        run: |
+          cd ./qt-cli
+          bash ./run.sh test unit && \
+          bash ./run.sh test e2e

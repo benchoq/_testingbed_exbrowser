@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: qtcli
+
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - id: qtcli
+    dir: ./src
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s # strip symbol table
+      - -w # strip DWARF debugging information
+      - -X main.version={{ .Version }}
+      - -X main.timestamp={{ .Timestamp }}
+      - -X main.commit={{ .FullCommit }}
+    binary: >-
+      {{- if eq .Os "darwin" }}_intermediate/{{ end -}}
+      bin/qtcli-
+      {{- .Os }}-
+      {{- .Arch }}-
+      {{- .Version }}/qtcli
+    no_unique_dist_dir: true
+    ignore:
+      - goos: linux
+        goarch: arm64
+      - goos: windows
+        goarch: arm64
+
+universal_binaries:
+  - name_template: qtcli
+    replace: true
+    hooks:
+      post:
+        - mv {{ .Path | dir }} dist/bin/qtcli-darwin-all-{{- .Version }}/
+
+snapshot:
+  version_template: '{{ .Version }}'
+
+checksum:
+  disable: true
+
+archives:
+  - formats: [ 'binary' ]

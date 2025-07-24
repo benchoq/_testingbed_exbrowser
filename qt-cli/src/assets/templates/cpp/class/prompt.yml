@@ -1,0 +1,12 @@
+version: "1"
+
+steps:
+  - id: baseClass
+    question: "Base class:"
+    type: picker
+    items:
+      - text: QObject
+      - text: QWidget
+      - text: QMainWindow
+      - text: QQuickItem
+    default: QObject

@@ -1,0 +1,38 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page vscodeext-how-create-projects.html
+    \previouspage vscodeext-how-tos.html
+    \nextpage vscodeext-reference.html
+
+    \ingroup vscodeext-how-to-cpp
+    \ingroup vscodeext-how-to-qml
+
+    \title Create Qt projects
+
+    To create a project, select a preset for a particular project type:
+
+    \list 1
+        \li Go to \uicontrol {Command Palette}, and then select
+            \uicontrol {Qt: Create a new project or file}.
+        \li In \uicontrol {Project}, select the project type.
+            \image {vscodeext-create-new-project.webp} {New item view}
+        \li In \uicontrol {Name}, enter a name for the project.
+        \li In \uicontrol {Create in}, enter the path for the project files.
+            For example, \c {C:\Qt\examples}.
+        \li In \uicontrol {Options}, set options depending on the project type.
+        \li Select \uicontrol {Create} to create the project files.
+        \li Select a CMake kit for the project.
+    \endlist
+
+    \section1 Create custom presets
+
+    When you change the \uicontrol {Options} for a project or file type, you can
+    select \uicontrol {Create} to create a custom preset. Custom presets appear
+    on the preset list and you can select them to create new projects or files.
+
+    To save changes to custom presets, select \uicontrol {Save}.
+
+    \sa {Tutorial: Qt Widgets application}, {Add files to projects}
+*/

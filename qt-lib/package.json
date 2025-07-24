@@ -1,0 +1,41 @@
+{
+  "name": "qt-lib",
+  "version": "1.9.0",
+  "main": "out/index.js",
+  "types": "out/index.d.ts",
+  "files": [
+    "out"
+  ],
+  "scripts": {
+    "compile": "tsc",
+    "pretest": "npm run compile && npm run lint",
+    "ci-lint": "npm run prettierCheck && eslint . ",
+    "lint": "npm run prettierWrite && eslint . --fix --cache",
+    "prettierWrite": "npm run prettierBase -- --write \"**/*.{js,ts,json,mjs,cjs}\" --log-level silent",
+    "prettierCheck": "npm run prettierBase -- --check \"**/*.{js,ts,json,mjs,cjs}\"",
+    "prettierBase": "prettier --config \"../common/.prettierrc\" --ignore-path \"../common/.prettierignore\" --cache --cache-strategy metadata"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.21.0",
+    "@types/async": "^3.2.24",
+    "@types/node": "^20.17.0",
+    "@types/vscode": "^1.94.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "esbuild": "^0.25.0",
+    "eslint": "^8.57.1",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@vscode/extension-telemetry": "^0.9.7",
+    "async": "^3.2.6",
+    "module-alias": "^2.2.3",
+    "typescript": "^5.6.3",
+    "untildify": "^5.0.0",
+    "winston": "^3.15.0",
+    "winston-transport-vscode": "^0.1.0"
+  }
+}

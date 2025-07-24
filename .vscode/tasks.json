@@ -1,0 +1,101 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "npm qt-cpp watch",
+      "problemMatcher": "$tsc-watch",
+      "command": "npm run watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/qt-cpp"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm qt-qml watch",
+      "problemMatcher": "$tsc-watch",
+      "command": "npm run watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/qt-qml"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm qt-core watch",
+      "problemMatcher": "$tsc-watch",
+      "command": "npm run watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/qt-core"
+      }
+    },
+    {
+      "label": "npm qt-core watch + vite:start",
+      "dependsOn": [
+        "npm qt-core watch",
+        "vite:start"
+      ],
+      "dependsOrder": "parallel"
+    },
+    {
+      "type": "shell",
+      "label": "npm qt-ui watch",
+      "problemMatcher": "$tsc-watch",
+      "command": "npm run watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/qt-ui"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "vite:start",
+      "command": "npx ts-node ./scripts/run_vite.ts start --dir ../qt-core/webview-ui",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "vite:stop",
+      "command": "npx ts-node ./scripts/run_vite.ts stop --dir ../qt-core/webview-ui",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}

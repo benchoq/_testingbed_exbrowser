@@ -1,0 +1,65 @@
+project     = vscodeext
+description = "Qt Extension for VS Code"
+url         = https://doc.qt.io/vscodeext
+
+# Project contains only .qdoc sources, no PCH to generate
+moduleheader =
+
+#Words to ignore for auto-linking
+ignorewords += \
+    macOS
+
+sourcedirs = ../src
+
+imagedirs = ../images
+
+# exampledirs = ../examples
+# examples.fileextensions += *.qml *.svg
+
+defines += vscodeext
+
+sources.fileextensions         = "*.qdoc"
+
+qhp.projects            = vscodeext
+qhp.vscodeext.file             = vscodeext.qhp
+qhp.vscodeext.namespace        = org.qt-project.vscodeext
+qhp.vscodeext.virtualFolder    = doc
+qhp.vscodeext.indexTitle       = Qt Extension for VS Code
+qhp.vscodeext.filterAttributes = Qt Extension for VS Code
+qhp.vscodeext.customFilters.vscodeext.name = Qt Extension for VS Code
+qhp.vscodeext.customFilters.vscodeext.filterAttributes = Qt Extension for VS Code
+qhp.vscodeext.indexRoot        =
+
+qhp.vscodeext.subprojects = manual
+qhp.vscodeext.subprojects.manual.title = Qt Extension for VS Code
+qhp.vscodeext.subprojects.manual.indexTitle = All topics
+qhp.vscodeext.subprojects.manual.type = manual
+
+indexes  += $QT_INSTALL_DOCS/qtcmake/qtcmake.index \
+            $QT_INSTALL_DOCS/qtcore/qtcore.index \
+            $QT_INSTALL_DOCS/qtdoc/qtdoc.index \
+            $QT_INSTALL_DOCS/qtgui/qtgui.index \
+            $QT_INSTALL_DOCS/qtqml/qtqml.index \
+            $QT_INSTALL_DOCS/qtqmlmodels/qtqmlmodels.index \
+            $QT_INSTALL_DOCS/qtquick/qtquick.index \
+            $QT_INSTALL_DOCS/qtquickcontrols/qtquickcontrols.index \
+            $QT_INSTALL_DOCS/qtwidgets/qtwidgets.index
+
+# Doxygen compatibility commands
+
+macro.see                       = "\\sa"
+macro.function                  = "\\fn"
+
+# Product name macros
+
+macro.QVSC                     = "Qt Extension for VS Code"
+
+outputdir                       = ../doc/html
+
+navigation.homepage = "Qt Extension for VS Code"
+
+# Auto-generate navigation linking based on "All topics":
+navigation.toctitles = "All topics"
+navigation.toctitles.inclusive = false
+
+buildversion = "Qt Extension for VS Code"

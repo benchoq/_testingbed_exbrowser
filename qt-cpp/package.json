@@ -1,0 +1,312 @@
+{
+  "name": "qt-cpp",
+  "displayName": "Qt C++",
+  "description": "Qt C++ Support",
+  "version": "1.9.0",
+  "homepage": "https://www.qt.io/",
+  "icon": "res/icons/qt.png",
+  "publisher": "theqtcompany",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qt-labs/vscodeext"
+  },
+  "bugs": {
+    "url": "https://bugreports.qt.io/projects/VSCODEEXT"
+  },
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Snippets"
+  ],
+  "keywords": [
+    "Qt",
+    "C++",
+    "CMake",
+    "scan"
+  ],
+  "qna": "marketplace",
+  "pricing": "Free",
+  "activationEvents": [
+    "onCommand:cmake.activeFolderName",
+    "onCommand:cmake.activeFolderPath",
+    "onCommand:cmake.activeConfigurePresetName",
+    "onCommand:cmake.activeBuildPresetName",
+    "onCommand:cmake.activeTestPresetName",
+    "onCommand:cmake.buildTargetName",
+    "onCommand:cmake.launchTargetPath",
+    "onCommand:cmake.launchTargetDirectory",
+    "onCommand:cmake.launchTargetFilename",
+    "onCommand:cmake.getLaunchTargetPath",
+    "onCommand:cmake.getLaunchTargetDirectory",
+    "onCommand:cmake.getLaunchTargetFilename",
+    "onCommand:cmake.buildType",
+    "onCommand:cmake.buildDirectory",
+    "onCommand:cmake.executableTargets",
+    "onCommand:cmake.buildKit",
+    "onCommand:cmake.tasksBuildCommand",
+    "onCommand:qt-cpp.kitDirectory",
+    "onCommand:qt-cpp.qtDir",
+    "onCommand:qt-cpp.minGWgdb",
+    "onCommand:qt-cpp.natvis",
+    "onCommand:qt-cpp.natvis5",
+    "onCommand:qt-cpp.natvis6",
+    "onDebugResolve:cmake",
+    "onDebugInitialConfigurations",
+    "onDebugDynamicConfigurations:cmake",
+    "workspaceContains:CMakeLists.txt",
+    "workspaceContains:*/CMakeLists.txt",
+    "workspaceContains:*/*/CMakeLists.txt",
+    "workspaceContains:*/*/*/CMakeLists.txt",
+    "workspaceContains:.vscode/cmake-kits.json"
+  ],
+  "main": "./out/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "configuration": {
+      "title": "Qt C++ Configuration",
+      "properties": {
+        "qt-cpp.doNotAskForCMakePath": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Do not ask for setting [`#cmake.cmakePath#`](https://vector-of-bool.github.io/docs/vscode-cmake-tools/settings.html#cmake-cmakepath).\n\nCMake Tools search the PATH environment variable, and make some \n\neducated guesses on where to find CMake.",
+          "scope": "machine"
+        },
+        "qt-cpp.doNotWarnMissingSourceDir": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not show a warning when the source directory cannot be determined from the selected kit."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "qt-cpp.scanForQtKits",
+        "title": "%qt-cpp.command.scanForQtKits.title%",
+        "category": "Qt"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "cppdbg",
+        "label": "cppdbg",
+        "configurationSnippets": [
+          {
+            "label": "%qt-cpp.debugger.cppdbg.snippet.label%",
+            "description": "%qt-cpp.debugger.cppdbg.snippet.description%",
+            "body": {
+              "name": "Debug Qt Application with cppdbg",
+              "type": "cppdbg",
+              "request": "launch",
+              "program": "^\"\\${command:cmake.launchTargetPath}\"",
+              "stopAtEntry": false,
+              "cwd": "^\"\\${workspaceFolder}\"",
+              "visualizerFile": "^\"\\${command:qt-cpp.natvis}\"",
+              "showDisplayString": true,
+              "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/gdb",
+                "sourceFileMap": {
+                  "/home/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                }
+              },
+              "osx": {
+                "MIMode": "lldb",
+                "sourceFileMap": {
+                  "/Users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                }
+              },
+              "windows": {
+                "sourceFileMap": {
+                  "Q:/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "C:/work/build/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/Users/qt/work/install": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "/Users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                },
+                "environment": [
+                  {
+                    "name": "PATH",
+                    "value": "^\"\\${env:PATH};\\${command:qt-cpp.qtDir}\""
+                  },
+                  {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "^\"\\${command:qt-cpp.QT_QPA_PLATFORM_PLUGIN_PATH}\""
+                  },
+                  {
+                    "name": "QML_IMPORT_PATH",
+                    "value": "^\"\\${command:qt-cpp.QML_IMPORT_PATH}\""
+                  }
+                ],
+                "MIMode": "gdb",
+                "miDebuggerPath": "^\"\\${command:qt-cpp.minGWgdb}\""
+              }
+            }
+          },
+          {
+            "label": "%qt-cpp.debugger.lldb.snippet.label%",
+            "description": "%qt-cpp.debugger.lldb.snippet.description%",
+            "body": {
+              "name": "Debug Qt Application with lldb",
+              "type": "cppdbg",
+              "request": "launch",
+              "program": "^\"\\${command:cmake.launchTargetPath}\"",
+              "stopAtEntry": false,
+              "cwd": "^\"\\${workspaceFolder}\"",
+              "visualizerFile": "^\"\\${command:qt-cpp.natvis}\"",
+              "showDisplayString": true,
+              "linux": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "/usr/bin/lldb",
+                "sourceFileMap": {
+                  "/home/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                }
+              },
+              "osx": {
+                "MIMode": "lldb",
+                "sourceFileMap": {
+                  "/Users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                }
+              },
+              "windows": {
+                "sourceFileMap": {
+                  "Q:/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "C:/work/build/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/Users/qt/work/install": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "/Users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                },
+                "environment": [
+                  {
+                    "name": "PATH",
+                    "value": "^\"\\${env:PATH};\\${command:qt-cpp.qtDir}\""
+                  },
+                  {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "^\"\\${command:qt-cpp.QT_QPA_PLATFORM_PLUGIN_PATH}\""
+                  },
+                  {
+                    "name": "QML_IMPORT_PATH",
+                    "value": "^\"\\${command:qt-cpp.QML_IMPORT_PATH}\""
+                  }
+                ],
+                "MIMode": "lldb"
+              }
+            }
+          },
+          {
+            "label": "%qt-cpp.debugger.cppvsdbg.snippet.label%",
+            "description": "%qt-cpp.debugger.cppvsdbg.snippet.description%",
+            "body": {
+              "name": "Debug Qt Application with Visual Studio Debugger",
+              "type": "cppvsdbg",
+              "request": "launch",
+              "program": "^\"\\${command:cmake.launchTargetPath}\"",
+              "stopAtEntry": false,
+              "cwd": "^\"\\${workspaceFolder}\"",
+              "visualizerFile": "^\"\\${command:qt-cpp.natvis}\"",
+              "windows": {
+                "sourceFileMap": {
+                  "Q:/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "C:/work/build/qt5_workdir/w/s": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "c:/Users/qt/work/install": "^\"\\${command:qt-cpp.sourceDirectory}\"",
+                  "/Users/qt/work/qt": "^\"\\${command:qt-cpp.sourceDirectory}\""
+                },
+                "environment": [
+                  {
+                    "name": "PATH",
+                    "value": "^\"\\${env:PATH};\\${command:qt-cpp.qtDir}\""
+                  },
+                  {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "^\"\\${command:qt-cpp.QT_QPA_PLATFORM_PLUGIN_PATH}\""
+                  },
+                  {
+                    "name": "QML_IMPORT_PATH",
+                    "value": "^\"\\${command:qt-cpp.QML_IMPORT_PATH}\""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "label": "%qt-cpp.debugger.wasm.snippet.label%",
+            "description": "%qt-cpp.debugger.wasm.snippet.description%",
+            "body": {
+              "name": "Debug Qt WebAssembly Application",
+              "type": "chrome",
+              "request": "launch",
+              "url": "^\"http://localhost:3000/\\${command:qt-cpp.buildDirectoryName}/\\${command:qt-cpp.launchTargetFilenameWithoutExtension}.html\"",
+              "preLaunchTask": "Qt: WASM Start"
+            }
+          }
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "scopeName": "qt-cpp.injection",
+        "path": "./res/lang/cpp/qt_cpp.injection.json",
+        "injectTo": [
+          "source.c",
+          "source.cpp"
+        ]
+      }
+    ]
+  },
+  "taskDefinitions": [
+    {
+      "type": "Qt"
+    }
+  ],
+  "extensionDependencies": [
+    "theqtcompany.qt-core",
+    "ms-vscode.cmake-tools"
+  ],
+  "scripts": {
+    "vscode:prepublish": "cross-env NODE_ENV=production node ./esbuild.mjs && git rev-parse HEAD > commit",
+    "compile": "node ./esbuild.mjs",
+    "watch": "node ./esbuild.mjs --watch",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "npm run prettierWrite && eslint . --fix --cache",
+    "prettierWrite": "npm run prettierBase -- --write \"**/*.{js,ts,json,mjs,cjs}\" --log-level silent",
+    "prettierCheck": "npm run prettierBase -- --check \"**/*.{js,ts,json,mjs,cjs}\"",
+    "prettierBase": "prettier --config \"../common/.prettierrc\" --ignore-path \"../common/.prettierignore\" --cache --cache-strategy metadata",
+    "package": "vsce package --out out"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.21.0",
+    "@types/command-exists": "^1.2.3",
+    "@types/license-checker": "^25.0.6",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20.17.0",
+    "@types/vscode": "^1.94.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vscode/l10n-dev": "^0.0.30",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^2.32.0",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.25.0",
+    "eslint": "^8.57.1",
+    "license-checker": "^25.0.1",
+    "mocha": "^10.7.3",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@vscode/l10n": "^0.0.16",
+    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "command-exists": "^1.2.9",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.3",
+    "qt-lib": "file:../qt-lib",
+    "typescript": "^5.6.3",
+    "vscode-cmake-tools": "^1.2.0"
+  }
+}

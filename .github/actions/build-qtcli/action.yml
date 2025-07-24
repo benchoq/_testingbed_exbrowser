@@ -1,0 +1,71 @@
+name: Build qtcli binaries
+
+inputs:
+  working-directory:
+    description: 'Root directory of qt-cli (relative to repository root)'
+    default: '.'
+
+  deploy-target:
+    description: 'Folder where built binaries will be copied'
+
+outputs:
+  artifact-name:
+    description: 'Build artifact name'
+    value: ${{ steps.setup-env.outputs.artifact-name }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-go@v4
+      with:
+        go-version-file: ${{ inputs.working-directory }}/src/go.mod
+        cache-dependency-path: ${{ inputs.working-directory }}/src/go.sum
+        cache: true
+
+    - name: Setup build environment
+      id: setup-env
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        V=$(head -n 1 version.txt | xargs)
+        H=$(git rev-parse --short $GITHUB_SHA)
+
+        echo "QTCLI_VERSION=$V" >> $GITHUB_ENV
+        echo "artifact-name=qtcli-$V-$H" >> $GITHUB_OUTPUT
+        echo "- $(go version)"
+        echo "- qtcli version $V ($H)"
+
+    - name: Run tests (on ${{ runner.os }})
+      shell: bash
+      run: |
+        cd ${{ inputs.working-directory }}
+        bash ./run.sh test unit && \
+        bash ./run.sh test e2e
+
+    - name: Run goreleaser
+      uses: goreleaser/goreleaser-action@v6
+      with:
+        version: '~> v2'
+        distribution: goreleaser
+        args: release --snapshot --clean
+        workdir: ${{ inputs.working-directory }}
+      env:
+        GORELEASER_CURRENT_TAG: ${{ env.QTCLI_VERSION }}
+
+    - name: Upload artifact
+      id: step-artifacts-upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.setup-env.outputs.artifact-name }}
+        path: ${{ inputs.working-directory }}/dist/bin/*
+
+    - name: Deploy files (unsigned)
+      shell: bash
+      if: ${{ inputs.deploy-target != '' }}
+      run: |
+        mkdir -p ${{ inputs.deploy-target }}
+        cp -r ${{ inputs.working-directory }}/dist/bin/qtcli-* ${{ inputs.deploy-target }}
+        cp ${{ inputs.working-directory }}/LICENSE ${{ inputs.deploy-target }}
+        cp ${{ inputs.working-directory }}/ThirdPartyNotices.txt ${{ inputs.deploy-target }}
+        echo "---------------------------------"
+        cd ${{ inputs.deploy-target }} && find . && du -h

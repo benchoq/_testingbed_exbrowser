@@ -1,0 +1,16 @@
+version: "1"
+
+meta:
+  type: project
+  title: Qt console application
+  description: >-
+    Creates a project containing a single main.cpp file
+    with a stub implementation and no graphical UI.
+
+files:
+  - in: CMakeLists.txt
+  - in: main.cpp
+
+  - in: '@/common/git.ignore'
+    out: .gitignore
+    bypass: true
