@@ -72,8 +72,14 @@ export class ExBrowserDispatcher {
       // - docDir => 'corelib/ipc/doc'
       const relQDoc = utils.normalizePath(path.relative(qtDir, absQDoc));
       const groupDir = relQDoc.slice(0, relQDoc.indexOf('/'));
-      const docDir = relQDoc.slice(0, relQDoc.indexOf('doc/src')) + 'doc';
 
+      const docIndex = relQDoc.indexOf('doc/src');
+      if (docIndex === -1) {
+        console.log("invalid doc dir, relQDoc =", relQDoc);
+        return;
+      }
+
+      const docDir = relQDoc.slice(0, docIndex) + 'doc';
       const projectDir = utils.normalizePath(
         path.join(groupDir, reader.read('example')));
 
