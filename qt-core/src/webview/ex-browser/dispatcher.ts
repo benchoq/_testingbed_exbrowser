@@ -15,7 +15,8 @@ import {
 import type { ExBrowserPanel } from './panel';
 import * as utils from './utils';
 import { QDocReader } from './qdoc-reader';
-import { ExInfo } from '../shared/ex-types';
+import * as db from './db';
+// import { ExInfo } from '../shared/ex-types';
 
 const logger = createLogger('ex-browser-dispatcher');
 
@@ -26,8 +27,10 @@ export class ExBrowserDispatcher {
 
   public constructor() {
     this._handlers = new Map<CommandId, CommandHandler>([
-      [CommandId.ExBrowserGetList, this.onGetList]
+      [CommandId.ExBrowserGetList, this._onGetList]
     ]);
+
+    this._initDb();
   }
 
   public setPanel(p: ExBrowserPanel) {
@@ -36,7 +39,6 @@ export class ExBrowserDispatcher {
 
   public setComm(c: WebviewChannel) {
     this._comm = c;
-    console.log(this._comm);
   }
 
   public dispatch(cmd: unknown) {
@@ -58,11 +60,19 @@ export class ExBrowserDispatcher {
   }
 
   // handlers
-  private readonly onGetList = async (cmd: Command) => {
+  private readonly _onGetList = async (cmd: Command) => {
+    const result = db.collection()
+      .chain()
+      .find({ docDir: { $regex: /^widget/ } })
+      .data();
+
+    this._comm?.postDataReply(cmd, result);
+  }
+
+  private _initDb() {
     const qtDir = 'C:/tools/Qt/Examples/Qt-6.8.1';
     const absQDocs = utils.findAllQDocsUnder(qtDir);
     const reader = new QDocReader();
-    const found: ExInfo[] = [];
 
     absQDocs.forEach(absQDoc => {
       reader.load(absQDoc);
@@ -83,7 +93,7 @@ export class ExBrowserDispatcher {
       const projectDir = utils.normalizePath(
         path.join(groupDir, reader.read('example')));
 
-      found.push({
+      db.insert({
         baseDir: qtDir,
         docDir,
         projectDir,
@@ -92,7 +102,5 @@ export class ExBrowserDispatcher {
         categories: reader.readAll('examplecategory')
       });
     })
-
-    this._comm?.postDataReply(cmd, found);
   }
 }
