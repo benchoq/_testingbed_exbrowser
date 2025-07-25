@@ -3,6 +3,7 @@
 
 export interface ExInfo {
   baseDir: string;
+  groupDir: string;
   docDir: string;
   projectDir: string;
   title: string;
@@ -18,6 +19,7 @@ export function isExInfo(obj: unknown): obj is ExInfo {
 
   return (
     typeof o.baseDir === 'string' &&
+    typeof o.groupDir === 'string' &&
     typeof o.docDir === 'string' &&
     typeof o.projectDir === 'string' &&
     typeof o.title === 'string' &&

@@ -15,7 +15,8 @@ export enum CommandId {
   UiSelectWorkingDir,
 
   // examples browser
-  ExBrowserGetList
+  ExBrowserGetList,
+  ExBrowserGetFileInfo,
 }
 
 export const OneWayCommandIds = [

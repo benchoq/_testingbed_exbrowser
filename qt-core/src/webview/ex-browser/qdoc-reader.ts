@@ -14,7 +14,25 @@ export class QDocReader {
     this._lines = fs.readFileSync(fsPath, 'utf-8').split('\n');
   }
 
-  public read(tag: string): string {
+  public title() {
+    return this.get('title');
+  }
+
+  public projectDir() {
+    return this.get('example');
+  }
+
+  public image() {
+    const v = this.get('image');
+    return v.split(' ')[0] ?? '';
+  }
+
+  public categories(): string[] {
+    const v = this.getAll('examplecategory');
+    return v;
+  }
+
+  public get(tag: string): string {
     const regex = new RegExp(`^\\s*\\\\${tag}\\s+(.+)`);
 
     for (const line of this._lines) {
@@ -27,7 +45,7 @@ export class QDocReader {
     return '';
   }
 
-  public readAll(tag: string): string[] {
+  public getAll(tag: string): string[] {
     const regex = new RegExp(`^\\s*\\\\${tag}\\s+(.+)`);
 
     return this._lines

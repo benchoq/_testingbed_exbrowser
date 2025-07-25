@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
 import _ from 'lodash';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { Jimp } from 'jimp';
 
 import { createLogger } from 'qt-lib';
 import { WebviewChannel } from '@/webview/channel';
@@ -16,7 +18,6 @@ import type { ExBrowserPanel } from './panel';
 import * as utils from './utils';
 import { QDocReader } from './qdoc-reader';
 import * as db from './db';
-// import { ExInfo } from '../shared/ex-types';
 
 const logger = createLogger('ex-browser-dispatcher');
 
@@ -27,7 +28,8 @@ export class ExBrowserDispatcher {
 
   public constructor() {
     this._handlers = new Map<CommandId, CommandHandler>([
-      [CommandId.ExBrowserGetList, this._onGetList]
+      [CommandId.ExBrowserGetList, this._onGetList],
+      [CommandId.ExBrowserGetFileInfo, this._onGetFileInfo],
     ]);
 
     this._initDb();
@@ -63,44 +65,92 @@ export class ExBrowserDispatcher {
   private readonly _onGetList = async (cmd: Command) => {
     const result = db.collection()
       .chain()
-      .find({ docDir: { $regex: /^widget/ } })
+      // .find({ docDir: { $regex: /^widget/ } })
       .data();
 
     this._comm?.postDataReply(cmd, result);
   }
 
+  private readonly _onGetFileInfo = async (cmd: Command) => {
+    const baseDir = _.get(cmd.payload, 'baseDir', '');
+    const docDir = _.get(cmd.payload, 'docDir', '');
+    const image = _.get(cmd.payload, 'image', '');
+    const size = _.get(cmd.payload, 'size', 64) as number;
+
+    const fsPath = path.join(baseDir, docDir, 'images/', image);
+    const info = await createFileInfo(fsPath, size);
+
+    this._comm?.postDataReply(cmd, info);
+  };
+
   private _initDb() {
-    const qtDir = 'C:/tools/Qt/Examples/Qt-6.8.1';
-    const absQDocs = utils.findAllQDocsUnder(qtDir);
-    const reader = new QDocReader();
+    const baseDir = 'C:/tools/Qt/Examples/Qt-6.8.1';
+    const qdocsAbs = utils.findAllQDocsUnder(baseDir);
+    const qdocReader = new QDocReader();
 
-    absQDocs.forEach(absQDoc => {
-      reader.load(absQDoc);
+    qdocsAbs.forEach(qdocAbs => {
+      // baseDir => .../Qt-6.8.9
+      // qdocAbs = '.../Qt-6.8.9/corelib/ipc/doc/src/localfurtuneclient.qdoc'
+      // qdocRel = '            corelib/ipc/doc/src/localfurtuneclient.qdoc'
+      // groupDir => 'corelib'
+      // docDir => 'corelib/ipc/doc'
+      // projectDir => 'corelib/<qdoc:example>'
 
-      // relPath = 'corelib/ipc/doc/src/localfurtuneclient.qdoc'
-      // - groupDir => 'corelib'
-      // - docDir => 'corelib/ipc/doc'
-      const relQDoc = utils.normalizePath(path.relative(qtDir, absQDoc));
-      const groupDir = relQDoc.slice(0, relQDoc.indexOf('/'));
+      qdocReader.load(qdocAbs);
 
-      const docIndex = relQDoc.indexOf('doc/src');
-      if (docIndex === -1) {
-        console.log("invalid doc dir, relQDoc =", relQDoc);
+      const qdocRel = utils.normalizePath(path.relative(baseDir, qdocAbs));
+      const groupDir = qdocRel.slice(0, qdocRel.indexOf('/'));
+      const docDirIndex = qdocRel.indexOf('doc/');
+      if (docDirIndex === -1) {
+        console.log("invalid doc dir, relQDoc =", qdocRel);
         return;
       }
 
-      const docDir = relQDoc.slice(0, docIndex) + 'doc';
-      const projectDir = utils.normalizePath(
-        path.join(groupDir, reader.read('example')));
+      const docDir = qdocRel.slice(0, docDirIndex) + 'doc';
+      const projectDir = `${groupDir}/${qdocReader.projectDir()}`;
 
       db.insert({
-        baseDir: qtDir,
+        baseDir: baseDir,
+        groupDir,
         docDir,
         projectDir,
-        title: reader.read('title'),
-        image: reader.read('image'),
-        categories: reader.readAll('examplecategory')
+        title: qdocReader.title(),
+        image: qdocReader.image(),
+        categories: qdocReader.categories()
       });
     })
+  }
+}
+
+// helpers
+async function createFileInfo(absPath: string, thumbnailSize: number) {
+  let exists = false;
+  let thumbnail: number[] | undefined;
+
+  try {
+    if (await fileExists(absPath)) {
+      exists = true;
+
+      const image = await Jimp.read(absPath);
+      const resized = image.resize({
+        w: thumbnailSize,
+      });
+
+      const buffer = await resized.getBuffer('image/png');
+      thumbnail = Array.from(new Uint8Array(buffer));
+    }
+  } catch {
+    // do nothing on purpose
+  }
+
+  return { exists, ...(thumbnail && { thumbnail }) };
+}
+
+async function fileExists(fsPath: string) {
+  try {
+    const s = await fs.stat(fsPath);
+    return s.isFile();
+  } catch {
+    return false;
   }
 }
