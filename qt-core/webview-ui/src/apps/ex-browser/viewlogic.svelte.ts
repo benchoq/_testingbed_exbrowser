@@ -4,29 +4,26 @@
 import _ from 'lodash';
 
 import { vscode } from "@/apps/vscode";
-import { isExInfo, type ExInfo } from "@shared/ex-types";
+import { isParsedExampleData, type ParsedExampleData } from "@shared/ex-types";
 import { CommandId } from "@shared/message";
 import { data } from './states.svelte';
 
 export async function onAppMount() {
   const r = await vscode.post(CommandId.ExBrowserGetList);
 
-  if (Array.isArray(r) && r.every(isExInfo)) {
+  if (Array.isArray(r) && r.every(isParsedExampleData)) {
     data.info = r;
   }
 }
 
-
-export async function updateFileInfo(info: ExInfo) {
-  const key = info.title;
+export async function updateFileInfo(info: ParsedExampleData) {
+  const key = info.name;
   if (key.length === 0 || key in data.fileInfo) {
     return;
   }
 
   const payload = {
-    baseDir: info.baseDir,
-    docDir: info.docDir,
-    image: info.image,
+    imageUrl: info.imageUrl,
     size: 200
   }
 

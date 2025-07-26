@@ -7,19 +7,17 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   import { Card } from "flowbite-svelte";
   import { onMount } from 'svelte';
 
-  import { type ExInfo } from '@shared/ex-types';
+  import { type ParsedExampleData } from '@shared/ex-types';
   import * as viewlogic from './viewlogic.svelte';
   import { data } from './states.svelte';
 
-  interface PropType {
-    info: ExInfo
-  }
-
   let {
     info
-  }: PropType = $props();
+  }: {
+    info: ParsedExampleData
+  } = $props();
 
-  let fileInfo = $derived.by(() => { return data.fileInfo[info.title]; });
+  let fileInfo = $derived.by(() => { return data.fileInfo[info.name]; });
   let url = $derived.by(() => { return fileInfo?.thumbnailUrl; });
   const sizeClass = 'w-[200px] h-[200px]';
 
@@ -29,7 +27,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 </script>
 
 <Card class="border rounded p-3" color='blue'>
-  {info.title}
+  "{info.name}"
+  {info.description}
 
   {#if fileInfo && fileInfo.thumbnailUrl.length !== 0}
     <img src={url} alt="thumbnail"
@@ -37,9 +36,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
     />
   {:else}
     <div class="flex flex-col bg-amber-200">
-      <div>group={info.groupDir}</div>
-      <div>doc={info.docDir}</div>
-      <div>image={info.image}</div>
+      <div>module={info.module}</div>
+      <div>image={info.imageUrl}</div>
     </div>
   {/if}
 </Card>

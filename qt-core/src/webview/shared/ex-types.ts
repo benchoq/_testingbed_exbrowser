@@ -1,17 +1,8 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
-export interface ExInfo {
-  baseDir: string;
-  groupDir: string;
-  docDir: string;
-  projectDir: string;
-  title: string;
-  image: string;
-  categories: string[];
-}
-
 export interface ParsedExampleData {
+  module: string,
   description: string,
   tags: string,
 
@@ -21,11 +12,8 @@ export interface ParsedExampleData {
   isHighlighted: boolean,
   projectPath: string,
 
-  filesToOpen: {
-    all: string[],
-    mainIndex: number
-  },
-
+  files: string[],
+  mainFileIndex: number,
   metaEntries: {
     name: string,
     value: string
@@ -33,19 +21,34 @@ export interface ParsedExampleData {
 }
 
 // type guard functions
-export function isExInfo(obj: unknown): obj is ExInfo {
+export function isParsedExampleData(obj: unknown): obj is ParsedExampleData {
   if (typeof obj !== 'object' || obj === null) return false;
 
   const o = obj as Record<string, unknown>;
 
   return (
-    typeof o.baseDir === 'string' &&
-    typeof o.groupDir === 'string' &&
-    typeof o.docDir === 'string' &&
-    typeof o.projectDir === 'string' &&
-    typeof o.title === 'string' &&
-    typeof o.image === 'string' &&
-    Array.isArray(o.categories) &&
-    o.categories.every(c => typeof c === 'string')
+    typeof o.module === 'string' &&
+    typeof o.description === 'string' &&
+    typeof o.tags === 'string' &&
+
+    typeof o.name === 'string' &&
+    typeof o.docUrl === 'string' &&
+    typeof o.imageUrl === 'string' &&
+    typeof o.isHighlighted === 'boolean' &&
+    typeof o.projectPath === 'string' &&
+
+    Array.isArray(o.files) &&
+    o.files.every(f => typeof f === 'string') &&
+
+    typeof o.mainFileIndex === 'number' &&
+
+    Array.isArray(o.metaEntries) &&
+    o.metaEntries.every(e =>
+      typeof e === 'object' &&
+      e !== null &&
+      typeof (e as any).name === 'string' &&
+      typeof (e as any).value === 'string'
+    )
   );
 }
+

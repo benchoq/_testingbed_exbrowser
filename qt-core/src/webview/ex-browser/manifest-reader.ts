@@ -36,7 +36,7 @@ const xmlOptions = {
 const text = 'text'
 const attr = 'attributes'
 
-export function parseXml(absPath: string) {
+export function parseXml(absPath: string): ParsedExampleData[] {
   const data = fs.readFileSync(absPath);
   const parser = new XMLParser(xmlOptions);
   const o: unknown = parser.parse(data);
@@ -45,26 +45,25 @@ export function parseXml(absPath: string) {
   const examples = _.get(o, "instructionals.examples.example", []);
 
   if (!Array.isArray(examples)) {
-    return undefined;
+    return [];
   }
 
-  examples.forEach(ex => {
+  return examples.map(ex => {
     const attrs = _.get(ex, attr, {});
 
     const parsed: ParsedExampleData = {
+      module,
       description: _.get(ex, `description.${text}`, ''),
-      tags: _.get(ex, 'tags', ''),
+      tags: _.get(ex, `tags.${text}`, ''),
+
       name: _.get(attrs, 'name', ''),
       docUrl: _.get(attrs, 'docUrl', ''),
       imageUrl: _.get(attrs, 'imageUrl', ''),
       isHighlighted: Boolean(_.get(attrs, 'isHighlighted', '')),
       projectPath: _.get(attrs, 'projectPath', ''),
 
-      filesToOpen: {
-        all: [],
-        mainIndex: -1
-      },
-
+      files: [],
+      mainFileIndex: -1,
       metaEntries: []
     }
 
@@ -82,19 +81,14 @@ export function parseXml(absPath: string) {
     const filesToOpenArray = _.get(ex, 'fileToOpen', []);
     if (Array.isArray(filesToOpenArray)) {
       filesToOpenArray.forEach((f, i) => {
-        parsed.filesToOpen.all.push(_.get(f, text, ''));
+        parsed.files.push(_.get(f, text, ''));
+
         if (Boolean(_.get(f, `${attr}.mainFile`, '')) === true) {
-          parsed.filesToOpen.mainIndex = i;
+          parsed.mainFileIndex = i;
         }
       })
     }
 
-    console.log('---------------------');
-    console.log(module, parsed);
+    return parsed;
   })
-
-  // console.log(module);
-  // console.log(examples);
-
-  return o;
 }
