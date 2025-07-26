@@ -11,6 +11,27 @@ export interface ExInfo {
   categories: string[];
 }
 
+export interface ParsedExampleData {
+  description: string,
+  tags: string,
+
+  name: string,
+  docUrl: string,
+  imageUrl: string,
+  isHighlighted: boolean,
+  projectPath: string,
+
+  filesToOpen: {
+    all: string[],
+    mainIndex: number
+  },
+
+  metaEntries: {
+    name: string,
+    value: string
+  }[];
+}
+
 // type guard functions
 export function isExInfo(obj: unknown): obj is ExInfo {
   if (typeof obj !== 'object' || obj === null) return false;

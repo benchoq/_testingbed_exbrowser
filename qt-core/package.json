@@ -241,6 +241,7 @@
     "axios": "^1.9.0",
     "command-exists": "^1.2.9",
     "dotenv": "^16.5.0",
+    "fast-xml-parser": "^5.2.5",
     "jimp": "^1.6.0",
     "lodash": "^4.17.21",
     "lokijs": "^1.5.12",
