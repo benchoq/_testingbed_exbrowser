@@ -15,7 +15,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 </script>
 
 <div class="
-  grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]
+  grid grid-cols-[repeat(auto-fill,200px)]
   gap-4 p-4
 ">
   {#each data.info as info, index (index)}

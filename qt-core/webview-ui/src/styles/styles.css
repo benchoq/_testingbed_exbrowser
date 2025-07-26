@@ -34,6 +34,12 @@ body {
 }
 
 /* utilities */
+@utility qt-surface {
+  color: var(--qt-surface-foreground);
+  background-color: var(--qt-surface-background);
+  border: 1px solid var(--qt-surface-border);
+}
+
 @utility qt-border-radius {
   border-radius: 2px;
 }
