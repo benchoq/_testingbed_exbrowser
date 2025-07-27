@@ -10,9 +10,13 @@ import { data, ui } from './states.svelte';
 
 export async function onAppMount() {
   const r = await vscode.post(CommandId.ExBrowserGetList);
-
   if (Array.isArray(r) && r.every(isParsedExampleData)) {
     data.info = r;
+  }
+
+  const r2 = await vscode.post(CommandId.ExBrowserGetCategories);
+  if (Array.isArray(r2) && r2.every(e => typeof e === 'string')) {
+    data.categories = r2;
   }
 }
 

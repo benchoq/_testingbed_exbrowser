@@ -14,10 +14,7 @@ export interface ParsedExampleData {
 
   files: string[],
   mainFileIndex: number,
-  metaEntries: {
-    name: string,
-    value: string
-  }[];
+  categories: string[]
 }
 
 // type guard functions
@@ -42,13 +39,8 @@ export function isParsedExampleData(obj: unknown): obj is ParsedExampleData {
 
     typeof o.mainFileIndex === 'number' &&
 
-    Array.isArray(o.metaEntries) &&
-    o.metaEntries.every(e =>
-      typeof e === 'object' &&
-      e !== null &&
-      typeof (e as any).name === 'string' &&
-      typeof (e as any).value === 'string'
-    )
+    Array.isArray(o.categories) &&
+    o.categories.every(c => typeof c === 'string')
   );
 }
 

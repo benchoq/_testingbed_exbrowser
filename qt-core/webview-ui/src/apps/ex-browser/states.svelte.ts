@@ -6,6 +6,7 @@ import { type FileInfo } from './types.svelte';
 
 export const data = $state({
   info: [] as ParsedExampleData[],
+  categories: [] as string[],
   fileInfo: {} as Record<string, FileInfo>,
 });
 

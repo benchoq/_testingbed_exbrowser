@@ -64,16 +64,18 @@ export function parseXml(absPath: string): ParsedExampleData[] {
 
       files: [],
       mainFileIndex: -1,
-      metaEntries: []
+      categories: []
     }
 
     // meta
     const metaEntryArray = _.get(ex, 'meta.entry', []);
     if (Array.isArray(metaEntryArray)) {
       metaEntryArray.forEach(entry => {
-        const name = _.get(entry, `${attr}.name`, '');
-        const value = _.get(entry, text, '');
-        parsed.metaEntries.push({ name, value });
+        const name = _.get(entry, `${attr}.name`, '') as string;
+        const value = _.get(entry, text, '') as string;
+        if (name === 'category') {
+          parsed.categories.push(value);
+        }
       })
     }
 

@@ -16,6 +16,7 @@ export enum CommandId {
 
   // examples browser
   ExBrowserGetList,
+  ExBrowserGetCategories,
   ExBrowserGetFileInfo,
 }
 

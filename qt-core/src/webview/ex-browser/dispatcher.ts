@@ -30,6 +30,7 @@ export class ExBrowserDispatcher {
   public constructor() {
     this._handlers = new Map<CommandId, CommandHandler>([
       [CommandId.ExBrowserGetList, this._onGetList],
+      [CommandId.ExBrowserGetCategories, this._onGetCategories],
       [CommandId.ExBrowserGetFileInfo, this._onGetFileInfo],
     ]);
 
@@ -72,6 +73,10 @@ export class ExBrowserDispatcher {
     this._comm?.postDataReply(cmd, result);
   }
 
+  private readonly _onGetCategories = async (cmd: Command) => {
+    this._comm?.postDataReply(cmd, Array.from(db.categorySet));
+  }
+
   private readonly _onGetFileInfo = async (cmd: Command) => {
     const baseDir = 'C:/tools/Qt/Docs/Qt-6.8.1';
     const imageUrl = _.get(cmd.payload, 'imageUrl', '');
@@ -89,7 +94,9 @@ export class ExBrowserDispatcher {
     const manifests = utils.findAllUnder(baseDir, 'examples-manifest.xml');
 
     manifests.forEach(manifest => {
-      db.insert(parseManifest(manifest));
+      const all = parseManifest(manifest);
+      db.insert(all);
+      all.forEach(ex => db.appendCategory(ex.categories));
     })
 
     // const all = manifests.reduce(

@@ -6,10 +6,16 @@ import Loki from 'lokijs';
 const db = new Loki('inmem.db');
 const Examples = db.addCollection('examples');
 
+export const categorySet = new Set<string>();
+
 export function collection() {
   return Examples;
 }
 
 export function insert<T>(data: T | T[]) {
   Examples.insert(data);
+}
+
+export function appendCategory(categories: string[]) {
+  categories.forEach(cat => categorySet.add(cat));
 }
