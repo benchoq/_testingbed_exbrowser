@@ -9,6 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   import '@/styles/app.css';
   import { ui } from './states.svelte';
   import * as viewlogic from './viewlogic.svelte';
+  import ExHeader from './ExHeader.svelte';
   import ExGallery from "./ExGallery.svelte";
   import ExSidePanel from './ExSidePanel.svelte';
 
@@ -24,8 +25,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
     <ExSidePanel />
   </div>
 
-  <div class="flex-1 overflow-x-hidden overflow-y-scroll">
-    <ExGallery />
+  <div class="w-full flex flex-col">
+    <ExHeader />
+    <div class="flex-1 overflow-x-hidden overflow-y-scroll">
+      <ExGallery />
+    </div>
   </div>
 </div>
 
