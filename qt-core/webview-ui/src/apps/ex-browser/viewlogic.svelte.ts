@@ -9,15 +9,16 @@ import { CommandId } from "@shared/message";
 import { data, ui } from './states.svelte';
 
 export async function onAppMount() {
-  const r = await vscode.post(CommandId.ExBrowserGetList);
-  if (Array.isArray(r) && r.every(isParsedExampleData)) {
-    data.info = r;
-  }
-
   const r2 = await vscode.post(CommandId.ExBrowserGetCategories);
   if (Array.isArray(r2) && r2.every(e => typeof e === 'string')) {
-    data.categories = r2;
+    data.categories = ['All', ...r2];
   }
+
+  await readExampleList();
+}
+
+export async function setCategory(category: string) {
+  await readExampleList(category);
 }
 
 export async function updateFileInfo(info: ParsedExampleData) {
@@ -51,4 +52,18 @@ export async function updateFileInfo(info: ParsedExampleData) {
 
 export function toggleSidePanel() {
   ui.sidePanel.collapsed = !ui.sidePanel.collapsed;
+}
+
+// helpers
+async function readExampleList(category = '') {
+  if (category.toLowerCase() === 'all') {
+    category = ''
+  }
+
+  const r = await vscode.post(CommandId.ExBrowserGetList, { category });
+  console.log(category);
+  if (Array.isArray(r) && r.every(isParsedExampleData)) {
+    data.info = r;
+    console.log(r);
+  }
 }

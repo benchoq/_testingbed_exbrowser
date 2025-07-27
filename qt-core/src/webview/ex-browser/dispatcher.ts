@@ -15,9 +15,10 @@ import {
   CommandHandler,
   IsCommand,
 } from '@/webview/shared/message';
+// import { ParsedExampleData } from '../shared/ex-types';
 import type { ExBrowserPanel } from './panel';
-import * as utils from './utils';
 import * as db from './db';
+import * as utils from './utils';
 import { parseXml as parseManifest } from './manifest-reader';
 
 const logger = createLogger('ex-browser-dispatcher');
@@ -64,17 +65,31 @@ export class ExBrowserDispatcher {
   }
 
   // handlers
+  // private readonly _onGetList = async (cmd: Command) => {
+  //   const category = _.get(cmd.payload, 'category', '');
+  //   const result = db.collection()
+  //     .chain()
+  //     .find((item: ParsedExampleData) => {
+  //       console.log(item.categories);
+  //       return category === '' || item.categories.includes(category)
+  //     }
+  //     )
+  //     .data();
+
+  //   this._comm?.postDataReply(cmd, result);
+  // }
   private readonly _onGetList = async (cmd: Command) => {
-    const result = db.collection()
-      .chain()
-      // .find({ docDir: { $regex: /^widget/ } })
-      .data();
+    const category = _.get(cmd.payload, 'category', '');
+    const result = (category === '')
+      ? db.collection().find()
+      : db.collection().find({ categories: { $contains: category } });
 
     this._comm?.postDataReply(cmd, result);
-  }
+}
+
 
   private readonly _onGetCategories = async (cmd: Command) => {
-    this._comm?.postDataReply(cmd, Array.from(db.categorySet));
+    this._comm?.postDataReply(cmd, Array.from(db.categorySet).sort());
   }
 
   private readonly _onGetFileInfo = async (cmd: Command) => {

@@ -24,12 +24,17 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
   {#if !ui.sidePanel.collapsed}
     <SectionLabel text='Categories' />
+
     <div class='w-full p-2 flex flex-col'>
       {#each data.categories as category (category)}
-        <button class='w-full qt-item text-left !py-1'>
+        <button
+          class='w-full qt-item text-left !py-0.5'
+          onclick={() => viewlogic.setCategory(category)}
+        >
           {category}
         </button>
       {/each}
     </div>
+
   {/if}
 </div>
