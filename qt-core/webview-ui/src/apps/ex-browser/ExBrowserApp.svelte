@@ -16,14 +16,14 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   onMount(viewlogic.onAppMount);
 </script>
 
-<div class="w-screen h-screen flex flex-row">
+<div class="w-screen h-screen flex flex-row gap-0.5">
   <div class={`
-    ${ui.sidePanel.collapsed ? 'w-[70px]' : 'w-[300px]'}
+    ${ui.sidePanel.collapsed ? '' : 'w-[350px]'}
   `}>
     <ExSidePanel />
   </div>
 
-  <div class="w-full flex flex-col m-2 gap-2">
+  <div class="w-full flex flex-col gap-2 pt-2">
     <ExHeader />
     <div class="flex-1 overflow-x-hidden overflow-y-scroll">
       <ExGallery />

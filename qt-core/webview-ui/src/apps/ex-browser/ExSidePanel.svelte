@@ -18,16 +18,16 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 </script>
 
 <div class='w-full h-full p-2'>
-  <div class='w-full flex flex-row'>
-    <div class='grow'></div>
-    <IconButton
-      flat square
-      icon={ui.sidePanel.collapsed ? PanelLeftOpen : PanelLeftClose}
-      onClicked={viewlogic.toggleSidePanel}
-    />
-  </div>
-
   {#if !ui.sidePanel.collapsed}
+    <div class='w-full flex flex-row'>
+      <div class='grow'></div>
+      <IconButton
+        flat square
+        icon={PanelLeftClose}
+        onClicked={viewlogic.toggleSidePanel}
+      />
+    </div>
+
     <SectionLabel text='Packages' icon={Package} />
     <div class='w-full p-2 flex flex-col'>
       {#each data.packs as pack (pack)}
@@ -40,7 +40,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
       {/each}
     </div>
 
-    <div class="h-[30px]"></div>
+    <div class="h-[25px]"></div>
 
     <SectionLabel text='Categories' icon={AlignLeft} />
     <div class='w-full p-2 flex flex-col'>
@@ -53,6 +53,30 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
         </button>
       {/each}
     </div>
+  {:else}
+    <div class="flex flex-col items-center gap-2.5">
+      <IconButton
+        flat square
+        tooltip="Open side panel"
+        tooltipPlacement="right"
+        icon={PanelLeftOpen}
+        onClicked={viewlogic.toggleSidePanel}
+      />
 
+      <IconButton
+        flat square
+        tooltip="Packages"
+        tooltipPlacement="right"
+        icon={Package}
+        onClicked={viewlogic.toggleSidePanel}
+      />
+      <IconButton
+        flat square
+        tooltip="Categories"
+        tooltipPlacement="right"
+        icon={AlignLeft}
+        onClicked={viewlogic.toggleSidePanel}
+      />
+    </div>
   {/if}
 </div>
