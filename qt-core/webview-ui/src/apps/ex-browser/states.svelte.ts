@@ -6,6 +6,7 @@ import { type FileInfo } from './types.svelte';
 
 export const data = $state({
   info: [] as ParsedExampleData[],
+  packs: ['Qt6 6.8.1', 'Qt6 6.9.0'],
   categories: ['All'] as string[],
   fileInfo: {} as Record<string, FileInfo>,
 });

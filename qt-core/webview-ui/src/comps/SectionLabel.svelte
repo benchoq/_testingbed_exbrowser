@@ -7,12 +7,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   import { P } from 'flowbite-svelte';
   import { ChevronRight } from '@lucide/svelte';
 
-  let { text, icon = true, class: className = '' } = $props();
+  let { text, icon = ChevronRight, class: className = '' } = $props();
+  const IconComp = $derived(icon);
 </script>
 
 <div class={`flex flex-row w-full mb-1 ${className} *:self-center gap-0.5`}>
-  {#if icon}
-    <ChevronRight class="qt-label highlight" size="sm" />
-  {/if}
+  <IconComp class="qt-label highlight" size="sm" />
   <P class="qt-label highlight">{text}</P>
 </div>

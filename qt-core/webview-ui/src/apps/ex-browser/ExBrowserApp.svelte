@@ -16,16 +16,14 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   onMount(viewlogic.onAppMount);
 </script>
 
-<div class="w-screen h-screen flex flex-row bg-blue-300">
+<div class="w-screen h-screen flex flex-row">
   <div class={`
-    qt-surface
-    ${ui.sidePanel.collapsed ? 'w-[70px]' : 'w-[250px]'}
-    transition-all duration-150 ease-in-out
+    ${ui.sidePanel.collapsed ? 'w-[70px]' : 'w-[300px]'}
   `}>
     <ExSidePanel />
   </div>
 
-  <div class="w-full flex flex-col">
+  <div class="w-full flex flex-col m-2 gap-2">
     <ExHeader />
     <div class="flex-1 overflow-x-hidden overflow-y-scroll">
       <ExGallery />

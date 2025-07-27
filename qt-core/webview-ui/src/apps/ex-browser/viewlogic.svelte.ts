@@ -17,6 +17,11 @@ export async function onAppMount() {
   await readExampleList();
 }
 
+export async function setPack(pack: string) {
+  console.log(pack);
+  // await readExampleList(category);
+}
+
 export async function setCategory(category: string) {
   await readExampleList(category);
 }
