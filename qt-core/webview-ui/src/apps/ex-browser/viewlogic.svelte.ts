@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { vscode } from "@/apps/vscode";
 import { isParsedExampleData, type ParsedExampleData } from "@shared/ex-types";
 import { CommandId } from "@shared/message";
-import { data } from './states.svelte';
+import { data, ui } from './states.svelte';
 
 export async function onAppMount() {
   const r = await vscode.post(CommandId.ExBrowserGetList);
@@ -45,3 +45,6 @@ export async function updateFileInfo(info: ParsedExampleData) {
   }
 }
 
+export function toggleSidePanel() {
+  ui.sidePanel.collapsed = !ui.sidePanel.collapsed;
+}

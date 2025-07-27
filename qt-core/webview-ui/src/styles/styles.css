@@ -5,6 +5,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
 /* variables */
 body {
+  @apply p-0;
+
   /* panel, popup, ... */
   --qt-surface-foreground: var(--vscode-foreground);
   --qt-surface-background: var(--vscode-sideBar-background);
