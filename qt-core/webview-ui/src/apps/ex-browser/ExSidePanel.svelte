@@ -44,15 +44,16 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
     <SectionLabel text='Categories' icon={AlignLeft} />
     <div class='w-full p-2 flex flex-col'>
-      {#each data.categories as category (category)}
+      {#each data.categories as cat (cat)}
         <button
           class={`
-            qt-item${(category === ui.category) ? '-selected' : ''}
-            w-full text-left !px-3 !py-0.5
+            qt-item${(cat.name === ui.category) ? '-selected' : ''}
+            w-full text-left flex flex-row !px-3 !py-0.5
           `}
-          onclick={() => viewlogic.setCategory(category)}
+          onclick={() => viewlogic.setCategory(cat.name)}
         >
-          {category}
+          <div class="flex-1">{cat.name}</div>
+          <div>{cat.numExamples}</div>
         </button>
       {/each}
     </div>

@@ -19,11 +19,26 @@ export interface ParsedExampleData {
   __nameLower?: string
 }
 
-// type guard functions
-export function isParsedExampleData(obj: unknown): obj is ParsedExampleData {
-  if (typeof obj !== 'object' || obj === null) return false;
+export interface CategoryInfo {
+  name: string,
+  numExamples: number
+}
 
-  const o = obj as Record<string, unknown>;
+// type guard functions
+export function isCategoryInfo(x: unknown): x is CategoryInfo {
+  if (typeof x !== 'object' || x === null) return false;
+
+  const o = x as Record<string, unknown>;
+  return (
+    typeof o.name === 'string' &&
+    typeof o.numExamples === 'number'
+  )
+}
+
+export function isParsedExampleData(x: unknown): x is ParsedExampleData {
+  if (typeof x !== 'object' || x === null) return false;
+
+  const o = x as Record<string, unknown>;
 
   return (
     typeof o.module === 'string' &&

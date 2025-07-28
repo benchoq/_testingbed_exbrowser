@@ -6,7 +6,8 @@ import Loki from 'lokijs';
 const db = new Loki('inmem.db');
 const Examples = db.addCollection('examples');
 
-export const categorySet = new Set<string>();
+export let numAllExamples = 0;
+export const categoryInfo = new Map<string, number>();
 
 export function collection() {
   return Examples;
@@ -17,5 +18,9 @@ export function insert<T>(data: T | T[]) {
 }
 
 export function appendCategory(categories: string[]) {
-  categories.forEach(cat => categorySet.add(cat));
+  categories.forEach(cat => {
+    categoryInfo.set(cat, (categoryInfo.get(cat) ?? 0) + 1);
+  });
+
+  numAllExamples += 1;
 }

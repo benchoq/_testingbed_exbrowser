@@ -20,6 +20,7 @@ import type { ExBrowserPanel } from './panel';
 import * as db from './db';
 import * as utils from './utils';
 import { parseXml as parseManifest } from './manifest-reader';
+import { CategoryInfo } from '../shared/ex-types';
 
 const logger = createLogger('ex-browser-dispatcher');
 
@@ -93,15 +94,30 @@ export class ExBrowserDispatcher {
     }
 
     // query
+    console.time('query');
+    console.timeLog("query", "before query");
+
     const result = (filters.length === 0)
       ? db.collection().find()
       : db.collection().find({ $and: filters })
+
+    console.timeLog("query", "after query");
 
     this._comm?.postDataReply(cmd, result);
   }
 
   private readonly _onGetCategories = async (cmd: Command) => {
-    this._comm?.postDataReply(cmd, Array.from(db.categorySet).sort());
+    const all: CategoryInfo[] = Array
+    .from(db.categoryInfo)
+    .map(([k, v]) => ({ name: k, numExamples: v }));
+    all.sort((a, b) => a.name.localeCompare(b.name));
+
+    const total = {
+      name: "All",
+      numExamples: db.numAllExamples
+    }
+
+    this._comm?.postDataReply(cmd, [total, ...all]);
   }
 
   private readonly _onGetFileInfo = async (cmd: Command) => {

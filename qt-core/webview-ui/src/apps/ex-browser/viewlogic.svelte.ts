@@ -4,17 +4,19 @@
 import _ from 'lodash';
 
 import { vscode } from "@/apps/vscode";
-import { isParsedExampleData, type ParsedExampleData } from "@shared/ex-types";
+import {
+  type CategoryInfo,
+  type ParsedExampleData,
+  isCategoryInfo,
+  isParsedExampleData,
+} from "@shared/ex-types";
 import { CommandId } from "@shared/message";
 import { data, ui } from './states.svelte';
 
 export async function onAppMount() {
-  const r2 = await vscode.post(CommandId.ExBrowserGetCategories);
-  if (Array.isArray(r2) && r2.every(e => typeof e === 'string')) {
-    data.categories = ['All', ...r2];
-  }
-
   ui.category = '';
+
+  await refreshCategories();
   await refreshExampleList();
 }
 
@@ -71,6 +73,13 @@ export function toggleSidePanel() {
 }
 
 // helpers
+async function refreshCategories() {
+  const r = await vscode.post(CommandId.ExBrowserGetCategories);
+  if (Array.isArray(r) && r.every(isCategoryInfo)) {
+    data.categories = r;
+  }
+}
+
 async function refreshExampleList() {
   const payload = {
     category: ui.category,
