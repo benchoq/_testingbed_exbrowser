@@ -67,7 +67,7 @@ export async function updateFileInfo(info: ParsedExampleData) {
 }
 
 export function toggleSidePanel() {
-  ui.sidePanel.collapsed = !ui.sidePanel.collapsed;
+  ui.showSidePanel = !ui.showSidePanel;
 }
 
 // helpers
@@ -80,5 +80,6 @@ async function refreshExampleList() {
   const r = await vscode.post(CommandId.ExBrowserGetList, payload);
   if (Array.isArray(r) && r.every(isParsedExampleData)) {
     data.info = r;
+    ui.cursor.rebuild(data.info);
   }
 }

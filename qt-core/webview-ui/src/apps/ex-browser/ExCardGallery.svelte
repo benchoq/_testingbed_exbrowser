@@ -8,8 +8,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   import ExCard from "./ExCard.svelte";
 </script>
 
-<div class="grid grid-cols-[repeat(auto-fill,200px)] gap-4">
+<div class="grid grid-cols-[repeat(auto-fill,160px)] gap-4">
   {#each data.info as info, index (index)}
-    <ExCard {info}/>
+    <ExCard {info} {index}/>
   {/each}
 </div>

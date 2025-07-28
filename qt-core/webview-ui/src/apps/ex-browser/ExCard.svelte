@@ -5,42 +5,55 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { Tooltip } from 'flowbite-svelte';
 
   import { type ParsedExampleData } from '@shared/ex-types';
   import * as viewlogic from './viewlogic.svelte';
-  import { data } from './states.svelte';
+  import { data, ui } from './states.svelte';
+  import ExThumbnail from './ExThumbnail.svelte';
 
   let {
-    info
+    info,
+    index = -1
   }: {
-    info: ParsedExampleData
+    info: ParsedExampleData,
+    index: number
   } = $props();
 
-  let fileInfo = $derived.by(() => { return data.fileInfo[info.name]; });
-  let url = $derived.by(() => { return fileInfo?.thumbnailUrl; });
-  const sizeClass = 'w-[200px] h-[150px]';
+  let selected = $derived((index >= 0) && (index === ui.cursor.currentIndex))
+
+  function select() {
+    console.log(index);
+    ui.cursor.setCurrentIndex(index);
+    ui.showDetailsPanel = true;
+  }
 
   onMount(() => {
     viewlogic.updateFileInfo(info);
   });
 </script>
 
-<div class="qt-surface qt-border-radius flex flex-col">
+<button
+  class={`
+    qt-surface qt-border-radius flex flex-col text-left
+    ${selected ? 'bg-blue-500': ''}
+  `}
+  onclick={select}
+  >
   <div class="p-2">{info.name}</div>
   <!-- {info.description} -->
 
-  {#if fileInfo && fileInfo.thumbnailUrl.length !== 0}
-    <div class={`relative w-[200px] h-[150px] overflow-hidden`}>
-      <img
-        src={url}
-        alt={info.imageUrl}
-        class="absolute inset-0 w-full h-full object-contain bg-orange-300" />
-    </div>
-    {info.tags.map(t => `#${t}`).join(', ')}
-  {:else}
-    <div class="flex flex-col bg-amber-200">
+  <ExThumbnail width={160} height={120} {info} />
+    <!-- <div class="flex flex-col bg-amber-200">
       <div>module={info.module}</div>
       <div>image={info.imageUrl}</div>
-    </div>
-  {/if}
-</div>
+    </div> -->
+</button>
+<!--
+<Tooltip
+  class="qt-tooltip w-[300px]"
+  placement="top"
+  data-placement="top"
+>
+  {info.description}
+</Tooltip> -->

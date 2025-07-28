@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
 import { type ParsedExampleData } from "@shared/ex-types";
-import { type FileInfo } from './types.svelte';
+import { type FileInfo, CursorManager } from './types.svelte';
 
 export const data = $state({
   info: [] as ParsedExampleData[],
@@ -12,14 +12,10 @@ export const data = $state({
 });
 
 export const ui = $state({
-  selection: {
-    packIndex: 0,
-  },
-
-  category: '',
+  category: 'All',
   keyword: '',
+  cursor: new CursorManager(),
 
-  sidePanel: {
-    collapsed: false,
-  },
+  showSidePanel: false,
+  showDetailsPanel: false,
 })

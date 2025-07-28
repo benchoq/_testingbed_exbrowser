@@ -18,7 +18,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 </script>
 
 <div class='w-full h-full p-2'>
-  {#if !ui.sidePanel.collapsed}
+  {#if ui.showSidePanel}
     <div class='w-full flex flex-row'>
       <div class='grow'></div>
       <IconButton
@@ -46,7 +46,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
     <div class='w-full p-2 flex flex-col'>
       {#each data.categories as category (category)}
         <button
-          class='w-full qt-item text-left !py-0.5'
+          class={`
+            qt-item${(category === ui.category) ? '-selected' : ''}
+            w-full text-left !px-3 !py-0.5
+          `}
           onclick={() => viewlogic.setCategory(category)}
         >
           {category}
