@@ -78,15 +78,27 @@ export class ExBrowserDispatcher {
 
   //   this._comm?.postDataReply(cmd, result);
   // }
-  private readonly _onGetList = async (cmd: Command) => {
-    const category = _.get(cmd.payload, 'category', '');
-    const result = (category === '')
+  private readonly   _onGetList = async (cmd: Command) => {
+    const keyword = _.get(cmd.payload, 'keyword', '').trim();
+    const category = _.get(cmd.payload, 'category', '').trim();
+
+    // constitue filters
+    const filters: Record<string, unknown>[] = [];
+    if ((category.length !== 0) && (category.toLowerCase() !== 'all')) {
+      filters.push({ categories: { $contains: category } });
+    }
+
+    if (keyword.length !== 0) {
+      filters.push({ __nameLower: { $contains: keyword.toLowerCase() } });
+    }
+
+    // query
+    const result = (filters.length === 0)
       ? db.collection().find()
-      : db.collection().find({ categories: { $contains: category } });
+      : db.collection().find({ $and: filters })
 
     this._comm?.postDataReply(cmd, result);
-}
-
+  }
 
   private readonly _onGetCategories = async (cmd: Command) => {
     this._comm?.postDataReply(cmd, Array.from(db.categorySet).sort());

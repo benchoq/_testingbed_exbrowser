@@ -14,7 +14,8 @@ export async function onAppMount() {
     data.categories = ['All', ...r2];
   }
 
-  await readExampleList();
+  ui.selection.category = '';
+  await refreshExampleList();
 }
 
 export async function setPack(pack: string) {
@@ -23,7 +24,13 @@ export async function setPack(pack: string) {
 }
 
 export async function setCategory(category: string) {
-  await readExampleList(category);
+  ui.selection.category = category;
+  await refreshExampleList();
+}
+
+export async function search(input: string) {
+  // const r2 = await vscode.post(CommandId.ExBrowserGetCategories);
+  // await readExampleList(input);
 }
 
 export async function updateFileInfo(info: ParsedExampleData) {
@@ -60,15 +67,14 @@ export function toggleSidePanel() {
 }
 
 // helpers
-async function readExampleList(category = '') {
-  if (category.toLowerCase() === 'all') {
-    category = ''
+async function refreshExampleList() {
+  const payload = {
+    category: ui.selection.category,
+    keyword: ui.keyword,
   }
 
-  const r = await vscode.post(CommandId.ExBrowserGetList, { category });
-  console.log(category);
+  const r = await vscode.post(CommandId.ExBrowserGetList, payload);
   if (Array.isArray(r) && r.every(isParsedExampleData)) {
     data.info = r;
-    console.log(r);
   }
 }

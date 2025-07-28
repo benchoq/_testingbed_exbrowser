@@ -14,7 +14,9 @@ export interface ParsedExampleData {
 
   files: string[],
   mainFileIndex: number,
-  categories: string[]
+  categories: string[],
+
+  __nameLower?: string
 }
 
 // type guard functions

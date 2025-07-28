@@ -64,7 +64,9 @@ export function parseXml(absPath: string): ParsedExampleData[] {
 
       files: [],
       mainFileIndex: -1,
-      categories: []
+      categories: [],
+
+      __nameLower: _.get(attrs, 'name', '').toLowerCase()
     }
 
     // meta
