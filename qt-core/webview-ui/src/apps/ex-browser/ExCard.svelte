@@ -36,6 +36,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
         alt={info.imageUrl}
         class="absolute inset-0 w-full h-full object-contain bg-orange-300" />
     </div>
+    {info.tags.map(t => `#${t}`).join(', ')}
   {:else}
     <div class="flex flex-col bg-amber-200">
       <div>module={info.module}</div>

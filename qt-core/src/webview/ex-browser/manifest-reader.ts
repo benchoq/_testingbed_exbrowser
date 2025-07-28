@@ -54,7 +54,7 @@ export function parseXml(absPath: string): ParsedExampleData[] {
     const parsed: ParsedExampleData = {
       module,
       description: _.get(ex, `description.${text}`, ''),
-      tags: _.get(ex, `tags.${text}`, ''),
+      tags: _.get(ex, `tags.${text}`, '').split(','),
 
       name: _.get(attrs, 'name', ''),
       docUrl: _.get(attrs, 'docUrl', ''),

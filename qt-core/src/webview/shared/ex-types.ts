@@ -4,7 +4,7 @@
 export interface ParsedExampleData {
   module: string,
   description: string,
-  tags: string,
+  tags: string[],
 
   name: string,
   docUrl: string,
@@ -28,7 +28,7 @@ export function isParsedExampleData(obj: unknown): obj is ParsedExampleData {
   return (
     typeof o.module === 'string' &&
     typeof o.description === 'string' &&
-    typeof o.tags === 'string' &&
+    Array.isArray(o.tags) && o.tags.every(t => typeof t === 'string') &&
 
     typeof o.name === 'string' &&
     typeof o.docUrl === 'string' &&
@@ -36,8 +36,7 @@ export function isParsedExampleData(obj: unknown): obj is ParsedExampleData {
     typeof o.isHighlighted === 'boolean' &&
     typeof o.projectPath === 'string' &&
 
-    Array.isArray(o.files) &&
-    o.files.every(f => typeof f === 'string') &&
+    Array.isArray(o.files) && o.files.every(f => typeof f === 'string') &&
 
     typeof o.mainFileIndex === 'number' &&
 
