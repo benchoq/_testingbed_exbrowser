@@ -14,9 +14,9 @@ export const data = $state({
 export const ui = $state({
   selection: {
     packIndex: 0,
-    category: '',
   },
 
+  category: '',
   keyword: '',
 
   sidePanel: {

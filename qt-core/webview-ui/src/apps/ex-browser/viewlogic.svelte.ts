@@ -14,7 +14,7 @@ export async function onAppMount() {
     data.categories = ['All', ...r2];
   }
 
-  ui.selection.category = '';
+  ui.category = '';
   await refreshExampleList();
 }
 
@@ -24,13 +24,17 @@ export async function setPack(pack: string) {
 }
 
 export async function setCategory(category: string) {
-  ui.selection.category = category;
-  await refreshExampleList();
+  if (ui.category !== category) {
+    ui.category = category;
+    await refreshExampleList();
+  }
 }
 
-export async function search(input: string) {
-  // const r2 = await vscode.post(CommandId.ExBrowserGetCategories);
-  // await readExampleList(input);
+export async function setKeyword(input: string) {
+  if (ui.keyword !== input) {
+    ui.keyword = input;
+    await refreshExampleList();
+  }
 }
 
 export async function updateFileInfo(info: ParsedExampleData) {
@@ -69,7 +73,7 @@ export function toggleSidePanel() {
 // helpers
 async function refreshExampleList() {
   const payload = {
-    category: ui.selection.category,
+    category: ui.category,
     keyword: ui.keyword,
   }
 
