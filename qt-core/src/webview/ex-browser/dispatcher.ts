@@ -35,6 +35,7 @@ export class ExBrowserDispatcher {
       [CommandId.ExBrowserGetCategories, this._onGetCategories],
       [CommandId.ExBrowserGetFileInfo, this._onGetFileInfo],
       [CommandId.ExBrowserOpenDoc, this._onOpenDoc],
+      [CommandId.ExBrowserOpenFolder, this._onOpenFolder],
       [CommandId.ExBrowserCreateProject, this._onCreateProject],
     ]);
 
@@ -138,6 +139,16 @@ export class ExBrowserDispatcher {
     const example = _.get(cmd.payload, 'example', {});
     if (isParsedExampleData(example)) {
       openDoc(example);
+      this._comm?.postDataReply(cmd, { status: "done" });
+    }
+  };
+
+  private readonly _onOpenFolder = async (cmd: Command) => {
+    const example = _.get(cmd.payload, 'example', {});
+    if (isParsedExampleData(example)) {
+      openFolder(example);
+      this._comm?.postDataReply(cmd, { status: "done" });
+      this._panel?.close();
     }
   };
 
@@ -146,6 +157,7 @@ export class ExBrowserDispatcher {
     const example = _.get(cmd.payload, 'example', {});
     if (isParsedExampleData(example)) {
       createProject(baesDir, example);
+      this._comm?.postDataReply(cmd, { status: "done" });
       this._panel?.close();
     }
   };
@@ -251,6 +263,40 @@ function openDoc(ex: ParsedExampleData) {
   console.log("docHtml =", htmlAbs);
 
   void vscode.env.openExternal(vscode.Uri.file(htmlAbs));
+}
+
+function openFolder(ex: ParsedExampleData) {
+  const insRoot = 'C:/tools/Qt';
+  const qtVersion = 'Qt-6.8.1';
+  const examplesDir = path.join(insRoot, "Examples/", qtVersion);
+
+  // projectPath = 'assistant/remotecontrol/CMakeLists.txt' (in manifest xml)
+  // filesToOpen = 'assistant/remotecontrol/main.cpp' (in manifest xml) ...
+
+  // projectDirRel = 'assistant/remotecontrol'
+  // projectDirParentRel = assistant
+  // projectDirAbs = <examplesDir:Examples/Qt-6.8.1>/<projectDirRel:/assistant/remotecontrol>
+  // projectName = 'remotecontrol'
+
+  // targetDir = '<baseDirAbs>/<projectName:remotecontrol>'
+
+  const projectDirRel = path.dirname(ex.projectPath);
+  const projectDirAbs = path.join(examplesDir, projectDirRel);
+
+  vscode.workspace.updateWorkspaceFolders(
+    vscode.workspace.workspaceFolders?.length ?? 0,
+    null,
+    { uri: vscode.Uri.file(projectDirAbs) }
+  );
+
+  ex.files.forEach(file => {
+    const fileInTargetDirAbs = path.join(examplesDir, file);
+    void vscode.commands.executeCommand(
+      'vscode.open',
+      vscode.Uri.file(fileInTargetDirAbs),
+      { preview: false }
+    );
+  });
 }
 
 function createProject(baesDirAbs: string, ex: ParsedExampleData) {

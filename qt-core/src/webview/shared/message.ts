@@ -19,6 +19,7 @@ export enum CommandId {
   ExBrowserGetCategories,
   ExBrowserGetFileInfo,
   ExBrowserOpenDoc,
+  ExBrowserOpenFolder,
   ExBrowserCreateProject
 }
 
