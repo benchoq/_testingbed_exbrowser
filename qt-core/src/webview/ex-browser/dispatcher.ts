@@ -34,6 +34,7 @@ export class ExBrowserDispatcher {
       [CommandId.ExBrowserGetList, this._onGetList],
       [CommandId.ExBrowserGetCategories, this._onGetCategories],
       [CommandId.ExBrowserGetFileInfo, this._onGetFileInfo],
+      [CommandId.ExBrowserOpenDoc, this._onOpenDoc],
       [CommandId.ExBrowserCreateProject, this._onCreateProject],
     ]);
 
@@ -131,6 +132,13 @@ export class ExBrowserDispatcher {
     const info = await createFileInfo(fsPath, size);
 
     this._comm?.postDataReply(cmd, info);
+  };
+
+  private readonly _onOpenDoc = async (cmd: Command) => {
+    const example = _.get(cmd.payload, 'example', {});
+    if (isParsedExampleData(example)) {
+      openDoc(example);
+    }
   };
 
   private readonly _onCreateProject = async (cmd: Command) => {
@@ -231,6 +239,20 @@ function fileExists(fsPath: string) {
   }
 }
 
+function openDoc(ex: ParsedExampleData) {
+  const insRoot = 'C:/tools/Qt';
+  const qtVersion = 'Qt-6.8.1';
+  const docsDir = path.join(insRoot, "Docs/", qtVersion);
+
+  const uri = vscode.Uri.parse(ex.docUrl);
+  const htmlAbs = path.join(docsDir, uri.path);
+
+  console.log("docUri =", uri.path);
+  console.log("docHtml =", htmlAbs);
+
+  void vscode.env.openExternal(vscode.Uri.file(htmlAbs));
+}
+
 function createProject(baesDirAbs: string, ex: ParsedExampleData) {
   const insRoot = 'C:/tools/Qt';
   const qtVersion = 'Qt-6.8.1';
@@ -255,7 +277,6 @@ function createProject(baesDirAbs: string, ex: ParsedExampleData) {
   const projectDirRel = path.dirname(ex.projectPath);
   const projectDirAbs = path.join(examplesDir, projectDirRel);
   const projectName = path.basename(projectDirRel);
-  // const projectDirParentRel = projectDirRel.slice(0, -projectName.length);
 
   const targetDirAbs = path.join(baesDirAbs, projectName);
 

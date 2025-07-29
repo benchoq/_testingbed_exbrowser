@@ -4,8 +4,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 -->
 
 <script lang="ts">
-  import { X, ArrowRight } from '@lucide/svelte';
+  import { X, ArrowRight, BookMarked } from '@lucide/svelte';
+
   import { ui } from './states.svelte';
+  import * as viewlogic from './viewlogic.svelte';
   import IconButton from '@/comps/IconButton.svelte';
   import ExThumbnail from './ExThumbnail.svelte';
 
@@ -36,11 +38,16 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
           />
       </div>
       <div class="h-full flex-1 flex flex-col qt-surface p-2 gap-2 bg-blue-500/15">
-        <div class="w-full flex">
+        <div class="w-full flex flex-row gap-2">
           <IconButton
             icon={ArrowRight}
             text="Create a new project"
-            onClicked={() => { ui.showCreateDialog=true; }}
+            onClicked={() => { ui.showCreateDialog = true; }}
+          />
+          <IconButton
+            icon={BookMarked}
+            text="Open documentation"
+            onClicked={() => { viewlogic.openDoc(); }}
           />
           <div class="grow"></div>
         </div>

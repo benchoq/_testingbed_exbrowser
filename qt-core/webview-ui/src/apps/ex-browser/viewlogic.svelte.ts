@@ -48,6 +48,14 @@ export async function createProject(baseDir: string) {
   await vscode.post(CommandId.ExBrowserCreateProject, payload);
 }
 
+export async function openDoc() {
+  const payload = {
+    example: $state.snapshot(ui.cursor.currentInfo)
+  }
+
+  await vscode.post(CommandId.ExBrowserOpenDoc, payload);
+}
+
 export async function updateFileInfo(info: ParsedExampleData) {
   const key = info.name;
   if (key.length === 0 || key in data.fileInfo) {
