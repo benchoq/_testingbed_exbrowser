@@ -13,6 +13,9 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
   import ExSidePanel from './ExSidePanel.svelte';
   import ExCardGallery from "./ExCardGallery.svelte";
   import ExDetailsPanel from './ExDetailsPanel.svelte';
+  import ExCreateDialog from './ExCreateDialog.svelte';
+
+  let baseDir = 'C:/ws_temp'
 
   onMount(viewlogic.onAppMount);
 </script>
@@ -36,6 +39,20 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
       </div>
     {/if}
   </div>
+
+  {#if ui.showCreateDialog}
+    <ExCreateDialog
+      bind:value={baseDir}
+      text="Enter a base directory"
+      rejectText="Cancel"
+      acceptText="Create"
+      onRejected={() => { ui.showCreateDialog = false; }}
+      onAccepted={() => {
+        ui.showCreateDialog = false;
+        viewlogic.createProject(baseDir);
+      }}
+    />
+  {/if}
 </div>
 
   <!-- <ExDetailsPanel /> -->

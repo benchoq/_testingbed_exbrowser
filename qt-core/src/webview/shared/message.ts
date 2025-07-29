@@ -18,6 +18,7 @@ export enum CommandId {
   ExBrowserGetList,
   ExBrowserGetCategories,
   ExBrowserGetFileInfo,
+  ExBrowserCreateProject
 }
 
 export const OneWayCommandIds = [

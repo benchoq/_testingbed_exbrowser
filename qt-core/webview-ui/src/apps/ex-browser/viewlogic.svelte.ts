@@ -39,6 +39,15 @@ export async function setKeyword(input: string) {
   }
 }
 
+export async function createProject(baseDir: string) {
+  const payload = {
+    baseDir,
+    example: $state.snapshot(ui.cursor.currentInfo)
+  }
+
+  await vscode.post(CommandId.ExBrowserCreateProject, payload);
+}
+
 export async function updateFileInfo(info: ParsedExampleData) {
   const key = info.name;
   if (key.length === 0 || key in data.fileInfo) {

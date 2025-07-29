@@ -40,6 +40,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
           <IconButton
             icon={ArrowRight}
             text="Create a new project"
+            onClicked={() => {
+              console.log("clicked", ui.showCreateDialog);
+              ui.showCreateDialog=true;
+            }}
           />
           <div class="grow"></div>
         </div>

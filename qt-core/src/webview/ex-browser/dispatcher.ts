@@ -20,7 +20,7 @@ import type { ExBrowserPanel } from './panel';
 import * as db from './db';
 import * as utils from './utils';
 import { parseXml as parseManifest } from './manifest-reader';
-import { CategoryInfo } from '../shared/ex-types';
+import { CategoryInfo, isParsedExampleData } from '../shared/ex-types';
 
 const logger = createLogger('ex-browser-dispatcher');
 
@@ -34,6 +34,7 @@ export class ExBrowserDispatcher {
       [CommandId.ExBrowserGetList, this._onGetList],
       [CommandId.ExBrowserGetCategories, this._onGetCategories],
       [CommandId.ExBrowserGetFileInfo, this._onGetFileInfo],
+      [CommandId.ExBrowserCreateProject, this._onCreateProject],
     ]);
 
     this._initDb();
@@ -94,14 +95,14 @@ export class ExBrowserDispatcher {
     }
 
     // query
-    console.time('query');
-    console.timeLog("query", "before query");
+    // console.time('query');
+    // console.timeLog("query", "before query");
 
     const result = (filters.length === 0)
       ? db.collection().find()
       : db.collection().find({ $and: filters })
 
-    console.timeLog("query", "after query");
+    // console.timeLog("query", "after query");
 
     this._comm?.postDataReply(cmd, result);
   }
@@ -130,6 +131,14 @@ export class ExBrowserDispatcher {
     const info = await createFileInfo(fsPath, size);
 
     this._comm?.postDataReply(cmd, info);
+  };
+
+  private readonly _onCreateProject = async (cmd: Command) => {
+    const baesDir = _.get(cmd.payload, 'baseDir', '');
+    const example = _.get(cmd.payload, 'example', {});
+    if (isParsedExampleData(example)) {
+      console.log("got it", baesDir, example);
+    }
   };
 
   private _initDb() {

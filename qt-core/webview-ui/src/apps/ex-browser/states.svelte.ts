@@ -18,4 +18,5 @@ export const ui = $state({
 
   showSidePanel: false,
   showDetailsPanel: false,
+  showCreateDialog: false,
 })
