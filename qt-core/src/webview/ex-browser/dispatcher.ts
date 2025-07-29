@@ -79,7 +79,7 @@ export class ExBrowserDispatcher {
 
   //   this._comm?.postDataReply(cmd, result);
   // }
-  private readonly   _onGetList = async (cmd: Command) => {
+  private readonly _onGetList = async (cmd: Command) => {
     const keyword = _.get(cmd.payload, 'keyword', '').trim();
     const category = _.get(cmd.payload, 'category', '').trim();
 
@@ -135,6 +135,8 @@ export class ExBrowserDispatcher {
   private _initDb() {
     const baseDir = 'C:/tools/Qt/Docs/Qt-6.8.1';
     const manifests = utils.findAllUnder(baseDir, 'examples-manifest.xml');
+
+    db.clear();
 
     manifests.forEach(manifest => {
       const all = parseManifest(manifest);

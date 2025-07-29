@@ -66,21 +66,6 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
         icon={PanelLeftOpen}
         onClicked={viewlogic.toggleSidePanel}
       />
-
-      <IconButton
-        flat square
-        tooltip="Packages"
-        tooltipPlacement="right"
-        icon={Package}
-        onClicked={viewlogic.toggleSidePanel}
-      />
-      <IconButton
-        flat square
-        tooltip="Categories"
-        tooltipPlacement="right"
-        icon={AlignLeft}
-        onClicked={viewlogic.toggleSidePanel}
-      />
     </div>
   {/if}
 </div>

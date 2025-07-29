@@ -16,35 +16,31 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
     info,
     index = -1
   }: {
-    info: ParsedExampleData,
-    index: number
+    info: ParsedExampleData;
+    index: number;
   } = $props();
 
-  let selected = $derived((index >= 0) && (index === ui.cursor.currentIndex))
+  let selected = $derived(index >= 0 && index === ui.cursor.currentIndex);
 
   function select() {
     console.log(index);
     ui.cursor.setCurrentIndex(index);
     ui.showDetailsPanel = true;
   }
-
-  onMount(() => {
-    viewlogic.updateFileInfo(info);
-  });
 </script>
 
 <button
   class={`
     qt-surface qt-border-radius flex flex-col text-left
-    ${selected ? 'bg-blue-500': ''}
+    ${selected ? 'bg-blue-500' : ''}
   `}
   onclick={select}
-  >
+>
   <div class="p-2">{info.name}</div>
   <!-- {info.description} -->
 
   <ExThumbnail width={160} height={120} {info} />
-    <!-- <div class="flex flex-col bg-amber-200">
+  <!-- <div class="flex flex-col bg-amber-200">
       <div>module={info.module}</div>
       <div>image={info.imageUrl}</div>
     </div> -->

@@ -24,3 +24,10 @@ export function appendCategory(categories: string[]) {
 
   numAllExamples += 1;
 }
+
+export function clear() {
+  Examples.clear();
+
+  numAllExamples = 0;
+  categoryInfo.clear();
+}
