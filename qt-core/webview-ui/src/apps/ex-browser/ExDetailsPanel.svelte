@@ -20,7 +20,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
         {info.name}
       </div>
       <IconButton
-        flat square
+        flat
         icon={X}
         onClicked={() => { ui.showDetailsPanel = false; }}
       />
@@ -35,13 +35,17 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
           />
       </div>
-      <div class="h-full flex-1 flex flex-col bg-amber-600">
-        <div>{info.description}</div>
-        <div class="grow"></div>
+      <div class="h-full flex-1 flex flex-col qt-surface p-2 gap-2 bg-blue-500/15">
         <div class="w-full flex">
+          <IconButton
+            icon={ArrowRight}
+            text="Create a new project"
+          />
           <div class="grow"></div>
-          <IconButton icon={ArrowRight} text="Create a new project" />
         </div>
+        <div>{info.description}</div>
+        <div>{info.projectPath}</div>
+        <div class="grow"></div>
       </div>
     </div>
   {/if}
