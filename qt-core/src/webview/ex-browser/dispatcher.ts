@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only
 
 import _ from 'lodash';
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { Jimp } from 'jimp';
@@ -20,7 +20,7 @@ import type { ExBrowserPanel } from './panel';
 import * as db from './db';
 import * as utils from './utils';
 import { parseXml as parseManifest } from './manifest-reader';
-import { CategoryInfo, isParsedExampleData } from '../shared/ex-types';
+import { CategoryInfo, isParsedExampleData, ParsedExampleData } from '../shared/ex-types';
 
 const logger = createLogger('ex-browser-dispatcher');
 
@@ -137,7 +137,8 @@ export class ExBrowserDispatcher {
     const baesDir = _.get(cmd.payload, 'baseDir', '');
     const example = _.get(cmd.payload, 'example', {});
     if (isParsedExampleData(example)) {
-      console.log("got it", baesDir, example);
+      createProject(baesDir, example);
+      this._panel?.close();
     }
   };
 
@@ -203,7 +204,7 @@ async function createFileInfo(absPath: string, thumbnailSize: number) {
   let thumbnail: number[] | undefined;
 
   try {
-    if (await fileExists(absPath)) {
+    if (fileExists(absPath)) {
       exists = true;
 
       const image = await Jimp.read(absPath);
@@ -221,11 +222,81 @@ async function createFileInfo(absPath: string, thumbnailSize: number) {
   return { exists, ...(thumbnail && { thumbnail }) };
 }
 
-async function fileExists(fsPath: string) {
+function fileExists(fsPath: string) {
   try {
-    const s = await fs.stat(fsPath);
+    const s = fs.statSync(fsPath);
     return s.isFile();
   } catch {
     return false;
+  }
+}
+
+function createProject(baesDirAbs: string, ex: ParsedExampleData) {
+  const insRoot = 'C:/tools/Qt';
+  const qtVersion = 'Qt-6.8.1';
+  const examplesDir = path.join(insRoot, "Examples/", qtVersion);
+
+  // projectPath = 'assistant/remotecontrol/CMakeLists.txt' (in manifest xml)
+  // filesToOpen = 'assistant/remotecontrol/main.cpp' (in manifest xml) ...
+
+  // projectDirRel = 'assistant/remotecontrol'
+  // projectDirParentRel = assistant
+  // projectDirAbs = <examplesDir:Examples/Qt-6.8.1>/<projectDirRel:/assistant/remotecontrol>
+  // projectName = 'remotecontrol'
+
+  // targetDir = '<baseDirAbs>/<projectName:remotecontrol>'
+
+  // Things to do:
+  // - ensure target dir exists
+  // - copy all files and dirs: <projectDirAbs> --> <targetDir>
+  // - add to current workspace
+  // - close webview
+
+  const projectDirRel = path.dirname(ex.projectPath);
+  const projectDirAbs = path.join(examplesDir, projectDirRel);
+  const projectName = path.basename(projectDirRel);
+  // const projectDirParentRel = projectDirRel.slice(0, -projectName.length);
+
+  const targetDirAbs = path.join(baesDirAbs, projectName);
+
+  console.log('projectDirAbs', projectDirAbs);
+  console.log('projectName', projectName);
+  console.log('targetDir', targetDirAbs);
+
+  copyAllUnder(projectDirAbs, targetDirAbs);
+
+  vscode.workspace.updateWorkspaceFolders(
+    vscode.workspace.workspaceFolders?.length ?? 0,
+    null,
+    { uri: vscode.Uri.file(targetDirAbs) }
+  );
+
+  ex.files.forEach(file => {
+    const fileUnderProjectDir = path.relative(projectDirRel, file);
+    const fileInTargetDirAbs = path.join(targetDirAbs, fileUnderProjectDir);
+    void vscode.commands.executeCommand(
+      'vscode.open',
+      vscode.Uri.file(fileInTargetDirAbs),
+      { preview: false }
+    );
+  });
+}
+
+function copyAllUnder(srcDir: string, destDir: string) {
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir, { recursive: true });
+  }
+
+  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      copyAllUnder(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
   }
 }
